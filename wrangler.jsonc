@@ -13,7 +13,6 @@
 	"observability": {
 		"enabled": true
 	},
-	"pages_build_output_dir": "public",
 	"d1_databases": [
 		{
 			"binding": "cforum_db",
