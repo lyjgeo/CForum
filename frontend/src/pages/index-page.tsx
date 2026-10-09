@@ -523,7 +523,7 @@ export function IndexPage() {
 				<div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
 					<div>
 							<h1 className="text-2xl font-semibold tracking-tight">忠党爱国</h1>
-						<p className="text-sm text-muted-foreground">由 Cloudflare Workers、Pages、D1、R2 提供服务。</p>
+						<p className="text-sm text-muted-foreground">只谈风月，莫问国事。</p>
 					</div>
 					<div className="flex items-center gap-2">
 						<label className="text-sm text-muted-foreground" htmlFor="category-filter">
