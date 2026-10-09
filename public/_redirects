@@ -1,1 +1,2 @@
+/posts/:id    /post.html?id=:id    200
 /*    /index.html   200
