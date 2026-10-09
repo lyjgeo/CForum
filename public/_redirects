@@ -1,3 +1,8 @@
-/posts/*    /post    200
-/post       /post.html   200
-/*          /index.html  200
+# 1. 帖子详情页的重写规则（必须放在最前面）
+/post    /post.html   200
+
+# 2. 显式排除 API 路径，确保它们能转发给 Worker
+/api/*   /api/:splat  200
+
+# 3. 首页兜底规则（放在最后，用于单页应用路由）
+/*       /index.html   200
