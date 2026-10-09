@@ -1,3 +1,4 @@
+```tsx
 import * as React from 'react';
 
 import { TurnstileWidget } from '@/components/turnstile';
@@ -13,6 +14,7 @@ export function RegisterPage() {
 	const [email, setEmail] = React.useState('');
 	const [username, setUsername] = React.useState('');
 	const [password, setPassword] = React.useState('');
+	const [inviteCode, setInviteCode] = React.useState('');
 	const [turnstileToken, setTurnstileToken] = React.useState('');
 	const [turnstileResetKey, setTurnstileResetKey] = React.useState(0);
 	const [loading, setLoading] = React.useState(false);
@@ -27,12 +29,14 @@ export function RegisterPage() {
 		e.preventDefault();
 		setError('');
 		setSuccess('');
+
 		if (turnstileActive && !turnstileToken) {
 			setError('请完成验证码验证');
 			return;
 		}
 
 		setLoading(true);
+
 		try {
 			const res = await fetch('/api/register', {
 				method: 'POST',
@@ -41,19 +45,24 @@ export function RegisterPage() {
 					email,
 					username,
 					password,
+					inviteCode,
 					'cf-turnstile-response': turnstileToken
 				})
 			});
+
 			const data = (await res.json()) as any;
+
 			if (!res.ok) {
 				setTurnstileToken('');
 				setTurnstileResetKey((v) => v + 1);
 				throw new Error(data?.error || '注册失败');
 			}
+
 			setSuccess('注册成功！请前往邮箱完成验证后再登录。');
 			setEmail('');
 			setUsername('');
 			setPassword('');
+			setInviteCode('');
 			setTurnstileToken('');
 			setTurnstileResetKey((v) => v + 1);
 		} catch (err: any) {
@@ -70,13 +79,25 @@ export function RegisterPage() {
 					<CardHeader>
 						<CardTitle>注册</CardTitle>
 					</CardHeader>
+
 					<CardContent>
 						<form className="space-y-4" onSubmit={handleSubmit}>
-							{error ? <div className="rounded-md border border-destructive/50 bg-destructive/5 p-3 text-sm text-destructive">{error}</div> : null}
-							{success ? <div className="rounded-md border bg-muted/40 p-3 text-sm">{success}</div> : null}
+							{error ? (
+								<div className="rounded-md border border-destructive/50 bg-destructive/5 p-3 text-sm text-destructive">
+									{error}
+								</div>
+							) : null}
+
+							{success ? (
+								<div className="rounded-md border bg-muted/40 p-3 text-sm">
+									{success}
+								</div>
+							) : null}
 
 							<div className="space-y-2">
-								<Label htmlFor="register-username">用户名 (最多 20 字符)</Label>
+								<Label htmlFor="register-username">
+									用户名 (最多 20 字符)
+								</Label>
 								<Input
 									id="register-username"
 									name="username"
@@ -102,7 +123,22 @@ export function RegisterPage() {
 							</div>
 
 							<div className="space-y-2">
-								<Label htmlFor="register-password">密码 (8-16 字符)</Label>
+								<Label htmlFor="register-invite-code">邀请码</Label>
+								<Input
+									id="register-invite-code"
+									name="inviteCode"
+									type="text"
+									autoComplete="off"
+									value={inviteCode}
+									onChange={(e) => setInviteCode(e.target.value)}
+									required
+								/>
+							</div>
+
+							<div className="space-y-2">
+								<Label htmlFor="register-password">
+									密码 (8-16 字符)
+								</Label>
 								<Input
 									id="register-password"
 									name="password"
@@ -114,14 +150,26 @@ export function RegisterPage() {
 								/>
 							</div>
 
-<TurnstileWidget enabled={turnstileActive} siteKey={siteKey} onToken={setTurnstileToken} resetKey={turnstileResetKey} />
+							<TurnstileWidget
+								enabled={turnstileActive}
+								siteKey={siteKey}
+								onToken={setTurnstileToken}
+								resetKey={turnstileResetKey}
+							/>
 
-							<Button className="w-full" type="submit" disabled={loading}>
+							<Button
+								className="w-full"
+								type="submit"
+								disabled={loading}
+							>
 								{loading ? '处理中...' : '注册'}
 							</Button>
 
 							<div className="text-sm">
-								<a className="text-muted-foreground hover:underline" href="/login">
+								<a
+									className="text-muted-foreground hover:underline"
+									href="/login"
+								>
 									已有账号？登录
 								</a>
 							</div>
@@ -132,3 +180,4 @@ export function RegisterPage() {
 		</div>
 	);
 }
+```
