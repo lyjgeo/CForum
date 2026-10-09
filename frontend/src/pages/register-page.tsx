@@ -1,4 +1,3 @@
-```tsx
 import * as React from 'react';
 
 import { TurnstileWidget } from '@/components/turnstile';
