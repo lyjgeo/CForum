@@ -172,101 +172,25 @@ export function IndexPage() {
 		if (!isMod) return;
 		const key = e.key.toLowerCase();
 		const shift = e.shiftKey;
-		if (!shift && key === 'b') {
-			e.preventDefault();
-			wrapSelection('**', '**', 'text');
-			return;
-		}
-		if (!shift && key === 'i') {
-			e.preventDefault();
-			wrapSelection('*', '*', 'text');
-			return;
-		}
-		if (!shift && key === 'u') {
-			e.preventDefault();
-			wrapSelection('<u>', '</u>', 'text');
-			return;
-		}
-		if (!shift && key === 'k') {
-			e.preventDefault();
-			insertLink(false);
-			return;
-		}
-		if (!shift && key === 't') {
-			e.preventDefault();
-			insertTable();
-			return;
-		}
-		if (shift && key === 'i') {
-			e.preventDefault();
-			insertLink(true);
-			return;
-		}
-		if (!shift && key === '0') {
-			e.preventDefault();
-			setHeading(0);
-			return;
-		}
-		if (!shift && key === '1') {
-			e.preventDefault();
-			setHeading(1);
-			return;
-		}
-		if (!shift && key === '2') {
-			e.preventDefault();
-			setHeading(2);
-			return;
-		}
-		if (!shift && key === '3') {
-			e.preventDefault();
-			setHeading(3);
-			return;
-		}
-		if (shift && key === 'k') {
-			e.preventDefault();
-			wrapBlock('```');
-			return;
-		}
-		if (shift && key === 'm') {
-			e.preventDefault();
-			wrapBlock('$$');
-			return;
-		}
-		if (shift && key === 'q') {
-			e.preventDefault();
-			toggleBlockquote();
-			return;
-		}
-		if (shift && key === '[') {
-			e.preventDefault();
-			toggleList(true);
-			return;
-		}
-		if (shift && key === ']') {
-			e.preventDefault();
-			toggleList(false);
-			return;
-		}
-		if (!shift && key === '[') {
-			e.preventDefault();
-			outdentLines();
-			return;
-		}
-		if (!shift && key === ']') {
-			e.preventDefault();
-			indentLines();
-			return;
-		}
-		if (shift && (e.code === 'Backquote' || key === '`')) {
-			e.preventDefault();
-			wrapSelection('`', '`', 'code');
-			return;
-		}
-		if (e.altKey && shift && e.code === 'Digit5') {
-			e.preventDefault();
-			wrapSelection('~~', '~~', 'text');
-			return;
-		}
+		if (!shift && key === 'b') { e.preventDefault(); wrapSelection('**', '**', 'text'); return; }
+		if (!shift && key === 'i') { e.preventDefault(); wrapSelection('*', '*', 'text'); return; }
+		if (!shift && key === 'u') { e.preventDefault(); wrapSelection('<u>', '</u>', 'text'); return; }
+		if (!shift && key === 'k') { e.preventDefault(); insertLink(false); return; }
+		if (!shift && key === 't') { e.preventDefault(); insertTable(); return; }
+		if (shift && key === 'i') { e.preventDefault(); insertLink(true); return; }
+		if (!shift && key === '0') { e.preventDefault(); setHeading(0); return; }
+		if (!shift && key === '1') { e.preventDefault(); setHeading(1); return; }
+		if (!shift && key === '2') { e.preventDefault(); setHeading(2); return; }
+		if (!shift && key === '3') { e.preventDefault(); setHeading(3); return; }
+		if (shift && key === 'k') { e.preventDefault(); wrapBlock('```'); return; }
+		if (shift && key === 'm') { e.preventDefault(); wrapBlock('$$'); return; }
+		if (shift && key === 'q') { e.preventDefault(); toggleBlockquote(); return; }
+		if (shift && key === '[') { e.preventDefault(); toggleList(true); return; }
+		if (shift && key === ']') { e.preventDefault(); toggleList(false); return; }
+		if (!shift && key === '[') { e.preventDefault(); outdentLines(); return; }
+		if (!shift && key === ']') { e.preventDefault(); indentLines(); return; }
+		if (shift && (e.code === 'Backquote' || key === '`')) { e.preventDefault(); wrapSelection('`', '`', 'code'); return; }
+		if (e.altKey && shift && e.code === 'Digit5') { e.preventDefault(); wrapSelection('~~', '~~', 'text'); return; }
 	}
 	const [turnstileToken, setTurnstileToken] = React.useState('');
 	const [turnstileResetKey, setTurnstileResetKey] = React.useState(0);
@@ -296,14 +220,7 @@ export function IndexPage() {
 			setLoading(true);
 			setError('');
 			try {
-				const sortBy =
-					sortOption === 'likes_desc'
-						? 'likes'
-						: sortOption === 'comments_desc'
-							? 'comments'
-							: sortOption === 'views_desc'
-								? 'views'
-								: 'time';
+				const sortBy = sortOption === 'likes_desc' ? 'likes' : sortOption === 'comments_desc' ? 'comments' : sortOption === 'views_desc' ? 'views' : 'time';
 				const sortDir = sortOption === 'time_asc' ? 'asc' : 'desc';
 				const categoryParam = selectedCategory ? `&category_id=${encodeURIComponent(selectedCategory)}` : '';
 				const searchParam = searchQuery ? `&q=${encodeURIComponent(searchQuery)}` : '';
@@ -320,13 +237,7 @@ export function IndexPage() {
 				const data = (await res.json()) as any;
 				const list: Post[] = Array.isArray(data) ? data : (data.posts as Post[]);
 				const total = Array.isArray(data) ? list.length : Number(data.total || 0);
-
-				const processed = list.map((p) => ({
-					...p,
-					like_count: p.like_count || 0,
-					comment_count: p.comment_count || 0
-				}));
-
+				const processed = list.map((p) => ({ ...p, like_count: p.like_count || 0, comment_count: p.comment_count || 0 }));
 				setPosts(processed);
 				setTotalPosts(total);
 				setPageOffset(offset);
@@ -339,13 +250,8 @@ export function IndexPage() {
 		[selectedCategory, searchQuery, sortOption]
 	);
 
-	React.useEffect(() => {
-		fetchCategories();
-	}, [fetchCategories]);
-
-	React.useEffect(() => {
-		fetchPosts(0);
-	}, [fetchPosts]);
+	React.useEffect(() => { fetchCategories(); }, [fetchCategories]);
+	React.useEffect(() => { fetchPosts(0); }, [fetchPosts]);
 
 	React.useEffect(() => {
 		const params = new URLSearchParams(window.location.search);
@@ -371,9 +277,7 @@ export function IndexPage() {
 
 	React.useEffect(() => {
 		if (adminMenuPostId == null) return;
-		function close() {
-			setAdminMenuPostId(null);
-		}
+		function close() { setAdminMenuPostId(null); }
 		document.addEventListener('mousedown', close);
 		document.addEventListener('touchstart', close);
 		return () => {
@@ -394,18 +298,10 @@ export function IndexPage() {
 		setAdminActionPostId(post.id);
 		try {
 			const next = !post.is_pinned;
-			await apiFetch(`/admin/posts/${post.id}/pin`, {
-				method: 'POST',
-				headers: getSecurityHeaders('POST'),
-				body: JSON.stringify({ pinned: next })
-			});
+			await apiFetch(`/admin/posts/${post.id}/pin`, { method: 'POST', headers: getSecurityHeaders('POST'), body: JSON.stringify({ pinned: next }) });
 			setAdminMenuPostId(null);
 			await fetchPosts(pageOffset);
-		} catch {
-			return;
-		} finally {
-			setAdminActionPostId(null);
-		}
+		} catch { return; } finally { setAdminActionPostId(null); }
 	}
 
 	async function adminDeletePost(post: Post) {
@@ -413,44 +309,25 @@ export function IndexPage() {
 		if (!confirm('确定要删除这个帖子吗？此操作无法撤销。')) return;
 		setAdminActionPostId(post.id);
 		try {
-			await apiFetch(`/admin/posts/${post.id}`, {
-				method: 'DELETE',
-				headers: getSecurityHeaders('DELETE')
-			});
+			await apiFetch(`/admin/posts/${post.id}`, { method: 'DELETE', headers: getSecurityHeaders('DELETE') });
 			setAdminMenuPostId(null);
 			await fetchPosts(pageOffset);
-		} catch {
-			return;
-		} finally {
-			setAdminActionPostId(null);
-		}
+		} catch { return; } finally { setAdminActionPostId(null); }
 	}
 
 	async function adminMovePost(post: Post, categoryId: number | null) {
 		if (!user || user.role !== 'admin') return;
 		setAdminActionPostId(post.id);
 		try {
-			await apiFetch(`/admin/posts/${post.id}/move`, {
-				method: 'POST',
-				headers: getSecurityHeaders('POST'),
-				body: JSON.stringify({ category_id: categoryId })
-			});
+			await apiFetch(`/admin/posts/${post.id}/move`, { method: 'POST', headers: getSecurityHeaders('POST'), body: JSON.stringify({ category_id: categoryId }) });
 			setAdminMenuPostId(null);
 			await fetchPosts(pageOffset);
-		} catch {
-			return;
-		} finally {
-			setAdminActionPostId(null);
-		}
+		} catch { return; } finally { setAdminActionPostId(null); }
 	}
 
 	async function createPost(e: React.FormEvent) {
 		e.preventDefault();
-		if (!user) {
-			window.location.href = '/login';
-			return;
-		}
-
+		if (!user) { window.location.href = '/login'; return; }
 		setCreateError('');
 		const titleErr = validateText(newTitle, '标题');
 		if (titleErr) return setCreateError(titleErr);
@@ -465,12 +342,7 @@ export function IndexPage() {
 			await apiFetch<{ success: boolean }>('/posts', {
 				method: 'POST',
 				headers: getSecurityHeaders('POST'),
-				body: JSON.stringify({
-					title: newTitle,
-					content: newContent,
-					category_id: newCategoryId ? Number(newCategoryId) : null,
-					'cf-turnstile-response': turnstileToken
-				})
+				body: JSON.stringify({ title: newTitle, content: newContent, category_id: newCategoryId ? Number(newCategoryId) : null, 'cf-turnstile-response': turnstileToken })
 			});
 			setNewTitle('');
 			setNewContent('');
@@ -518,308 +390,234 @@ export function IndexPage() {
 		<div className="min-h-dvh bg-lime-100">
 			<PageShell>
 				<div className="space-y-6">
-				{banner ? <div className="rounded-md border bg-muted/40 p-3 text-sm">{banner}</div> : null}
-				<div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-					<div>
+					{banner ? <div className="rounded-md border bg-muted/40 p-3 text-sm">{banner}</div> : null}
+					<div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+						<div>
 							<h1 className="text-3xl font-bold tracking-tight text-pink-500 drop-shadow-[0_0_12px_rgba(236,72,153,0.55)]">忠党爱国</h1>
-						<p className="text-sm text-muted-foreground">只谈风月，莫问国事。</p>
-					</div>
-					<div className="flex items-center gap-2">
-						<label className="text-sm text-muted-foreground" htmlFor="category-filter">
-							分类
-						</label>
-						<select
-							id="category-filter"
-							className="h-9 rounded-md border bg-background px-3 text-sm"
-							value={selectedCategory}
-							onChange={(e) => {
-								setSelectedCategory(e.target.value);
-								setPageOffset(0);
-							}}
-						>
-							<option value="">全部</option>
-							<option value="uncategorized">未分类</option>
-							{categories.map((c) => (
-								<option key={c.id} value={String(c.id)}>
-									{c.name}
-								</option>
-							))}
-						</select>
-						<label className="text-sm text-muted-foreground" htmlFor="sort-filter">
-							排序
-						</label>
-						<select
-							id="sort-filter"
-							className="h-9 rounded-md border bg-background px-3 text-sm"
-							value={sortOption}
-							onChange={(e) => {
-								setSortOption(e.target.value);
-								setPageOffset(0);
-							}}
-						>
-							<option value="time_desc">最新发布</option>
-							<option value="time_asc">最早发布</option>
-							<option value="likes_desc">最多点赞</option>
-							<option value="comments_desc">最多评论</option>
-							<option value="views_desc">最多观看</option>
-						</select>
-						<form
-							className="flex items-center gap-2"
-							onSubmit={(e) => {
-								e.preventDefault();
-								setPageOffset(0);
-								setSearchQuery(searchInput.trim());
-							}}
-						>
-							<Input
-								value={searchInput}
-								onChange={(e) => setSearchInput(e.target.value)}
-								placeholder="搜索标题/内容"
-								className="h-9 w-48"
-							/>
-							<Button variant="outline" size="sm" type="submit" disabled={loading}>
-								<Search className="h-4 w-4" />
-								<span className="sr-only">搜索</span>
-							</Button>
-							{searchInput || searchQuery ? (
-								<Button
-									variant="outline"
-									size="sm"
-									type="button"
-									onClick={() => {
-										setSearchInput('');
-										setSearchQuery('');
-										setPageOffset(0);
-									}}
-									disabled={loading}
-								>
-									<X className="h-4 w-4" />
-									<span className="sr-only">清除</span>
-								</Button>
-							) : null}
-						</form>
-						<Button variant="outline" size="sm" onClick={() => fetchPosts(0)} disabled={loading}>
-							<RefreshCw className="h-4 w-4" />
-							<span className="sr-only">刷新</span>
-						</Button>
-					</div>
-				</div>
-
-				{user ? (
-					<Card>
-						<CardHeader>
-							<CardTitle className="flex items-center justify-between gap-2">
-								<span>发布新帖</span>
-								<Button type="button" variant="outline" size="sm" onClick={() => setCreateOpen((v) => !v)}>
-									{createOpen ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
-									<span className="sr-only">{createOpen ? '收起' : '展开'}</span>
-								</Button>
-							</CardTitle>
-						</CardHeader>
-						<CardContent>
-							{!createOpen ? (
-								<div className="text-sm text-muted-foreground">点击右侧按钮展开编辑器。</div>
-							) : (
-								<form className="space-y-4" onSubmit={createPost}>
-								{createError ? <div className="rounded-md border border-destructive/50 bg-destructive/5 p-3 text-sm text-destructive">{createError}</div> : null}
-								<div className="space-y-4">
-									<div className="space-y-2">
-										<Label htmlFor="new-title">标题</Label>
-										<Input id="new-title" maxLength={30} value={newTitle} onChange={(e) => setNewTitle(e.target.value)} required />
-									</div>
-									<div className="space-y-2">
-										<Label htmlFor="new-category">分类 (可选)</Label>
-										<select
-											id="new-category"
-											className="h-9 w-full rounded-md border bg-background px-3 text-sm"
-											value={newCategoryId}
-											onChange={(e) => setNewCategoryId(e.target.value)}
-										>
-											<option value="">无分类</option>
-											{categories.map((c) => (
-												<option key={c.id} value={String(c.id)}>
-													{c.name}
-												</option>
-											))}
-										</select>
-									</div>
-								</div>
-								<div className="space-y-2">
-								<div className="flex flex-wrap items-center justify-between gap-2">
-									<Label htmlFor="new-content">内容 (支持 Markdown)</Label>
-									<div className="flex items-center gap-2">
-										<span className="text-xs text-muted-foreground">快捷键：Ctrl+1/2/3、Ctrl+B/I/U、Ctrl+K、Ctrl+Shift+K</span>
-										<Button type="button" variant="outline" size="sm" onClick={() => setPreviewOpen((v) => !v)}>
-											{previewOpen ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-											<span className="sr-only">{previewOpen ? '关闭预览' : '打开预览'}</span>
-										</Button>
-									</div>
-								</div>
-								<div className={previewOpen ? 'grid gap-3 lg:grid-cols-2' : 'space-y-2'}>
-									<div className="space-y-2">
-										<Textarea
-											id="new-content"
-											ref={newContentRef}
-											value={newContent}
-											onChange={(e) => setNewContent(e.target.value)}
-											onKeyDown={handleEditorKeyDown}
-											rows={10}
-											className="min-h-[220px]"
-											required
-										/>
-										<div className="text-xs text-muted-foreground">Ctrl+T 表格，Ctrl+Shift+M 公式，Ctrl+Shift+Q 引用，Alt+Shift+5 删除线</div>
-									</div>
-									{previewOpen ? (
-										<div className="rounded-md border bg-muted/20 p-3">
-											<div className="mb-2 text-xs font-medium text-muted-foreground">预览</div>
-											<div
-												ref={previewRef}
-												className="prose max-w-none break-words [&_ul]:list-disc [&_ul]:pl-6 [&_ol]:list-decimal [&_ol]:pl-6 [&_li]:my-1"
-												dangerouslySetInnerHTML={{ __html: renderMarkdownToHtml(newContent || '') }}
-											/>
-										</div>
-									) : null}
-								</div>
-							</div>
-								{/* image upload button */}
-		<div className="space-y-2">
-			<label className="block text-sm font-medium text-muted-foreground">上传图片</label>
-			<input
-				type="file"
-				accept="image/*"
-				className="block w-full text-sm"
-				onChange={async (e) => {
-					const file = e.target.files && e.target.files[0];
-					if (!file) return;
-					setUploadError('');
-					if (file.size > 2 * 1024 * 1024) {
-						setUploadError('文件过大 (最大 2MB)');
-						return;
-					}
-					setUploadLoading(true);
-					try {
-						const formData = new FormData();
-						formData.append('file', file);
-						formData.append('type', 'post');
-						const res = await fetch('/api/upload', {
-							method: 'POST',
-							headers: getSecurityHeaders('POST', null),
-							body: formData
-						});
-						const data = await res.json();
-						if (!res.ok) throw new Error(data?.error || '上传失败');
-                        insertIntoContent(`
-
-![](${data.url})
-
-`);
-                        setPreviewOpen(true);
-					} catch (err: any) {
-						setUploadError(String(err?.message || err));
-					} finally {
-						setUploadLoading(false);
-					}
-				}}
-			/>
-			{uploadError ? <div className="text-sm text-destructive">{uploadError}</div> : null}
-			{uploadLoading ? <div className="text-sm text-muted-foreground">上传中…</div> : null}
-		</div>
-		<TurnstileWidget enabled={turnstileActive} siteKey={siteKey} onToken={setTurnstileToken} resetKey={turnstileResetKey} />
-
-								<Button type="submit" disabled={createLoading}>
-									{createLoading ? '发布中...' : '发布'}
-								</Button>
+							<p className="text-sm text-muted-foreground">只谈风月，莫问国事。</p>
+						</div>
+						<div className="flex items-center gap-2">
+							<label className="text-sm text-muted-foreground" htmlFor="category-filter">分类</label>
+							<select id="category-filter" className="h-9 rounded-md border bg-background px-3 text-sm" value={selectedCategory} onChange={(e) => { setSelectedCategory(e.target.value); setPageOffset(0); }}>
+								<option value="">全部</option>
+								<option value="uncategorized">未分类</option>
+								{categories.map((c) => (<option key={c.id} value={String(c.id)}>{c.name}</option>))}
+							</select>
+							<label className="text-sm text-muted-foreground" htmlFor="sort-filter">排序</label>
+							<select id="sort-filter" className="h-9 rounded-md border bg-background px-3 text-sm" value={sortOption} onChange={(e) => { setSortOption(e.target.value); setPageOffset(0); }}>
+								<option value="time_desc">最新发布</option>
+								<option value="time_asc">最早发布</option>
+								<option value="likes_desc">最多点赞</option>
+								<option value="comments_desc">最多评论</option>
+								<option value="views_desc">最多观看</option>
+							</select>
+							<form className="flex items-center gap-2" onSubmit={(e) => { e.preventDefault(); setPageOffset(0); setSearchQuery(searchInput.trim()); }}>
+								<Input value={searchInput} onChange={(e) => setSearchInput(e.target.value)} placeholder="搜索标题/内容" className="h-9 w-48" />
+								<Button variant="outline" size="sm" type="submit" disabled={loading}><Search className="h-4 w-4" /><span className="sr-only">搜索</span></Button>
+								{searchInput || searchQuery ? (
+									<Button variant="outline" size="sm" type="button" onClick={() => { setSearchInput(''); setSearchQuery(''); setPageOffset(0); }} disabled={loading}><X className="h-4 w-4" /><span className="sr-only">清除</span></Button>
+								) : null}
 							</form>
-							)}
-						</CardContent>
-					</Card>
-				) : (
-					<Card>
-						<CardContent className="py-6 text-sm text-muted-foreground">
-							<a className="text-foreground underline" href="/login">
-								登录
-							</a>{' '}
-							后可发布、点赞和评论。
-						</CardContent>
-					</Card>
-				)}
+							<Button variant="outline" size="sm" onClick={() => fetchPosts(0)} disabled={loading}><RefreshCw className="h-4 w-4" /><span className="sr-only">刷新</span></Button>
+						</div>
+					</div>
 
-				{error ? <div className="rounded-md border border-destructive/50 bg-destructive/5 p-3 text-sm text-destructive">{error}</div> : null}
-
-				<div className="space-y-4">
-					<div ref={listTopRef} />
-					{loading ? (
+					{user ? (
 						<Card>
-							<CardContent className="py-6 text-sm text-muted-foreground">加载中...</CardContent>
-						</Card>
-					) : posts.length === 0 ? (
-						<Card>
-							<CardContent className="py-6 text-sm text-muted-foreground">暂无帖子</CardContent>
+							<CardHeader>
+								<CardTitle className="flex items-center justify-between gap-2">
+									<span>发布新帖</span>
+									<Button type="button" variant="outline" size="sm" onClick={() => setCreateOpen((v) => !v)}>
+										{createOpen ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+										<span className="sr-only">{createOpen ? '收起' : '展开'}</span>
+									</Button>
+								</CardTitle>
+							</CardHeader>
+							<CardContent>
+								{!createOpen ? (
+									<div className="text-sm text-muted-foreground">点击右侧按钮展开编辑器。</div>
+								) : (
+									<form className="space-y-4" onSubmit={createPost}>
+										{createError ? <div className="rounded-md border border-destructive/50 bg-destructive/5 p-3 text-sm text-destructive">{createError}</div> : null}
+										<div className="space-y-4">
+											<div className="space-y-2">
+												<Label htmlFor="new-title">标题</Label>
+												<Input id="new-title" maxLength={30} value={newTitle} onChange={(e) => setNewTitle(e.target.value)} required />
+											</div>
+											<div className="space-y-2">
+												<Label htmlFor="new-category">分类 (可选)</Label>
+												<select id="new-category" className="h-9 w-full rounded-md border bg-background px-3 text-sm" value={newCategoryId} onChange={(e) => setNewCategoryId(e.target.value)}>
+													<option value="">无分类</option>
+													{categories.map((c) => (<option key={c.id} value={String(c.id)}>{c.name}</option>))}
+												</select>
+											</div>
+										</div>
+										<div className="space-y-2">
+											<div className="flex flex-wrap items-center justify-between gap-2">
+												<Label htmlFor="new-content">内容 (支持 Markdown)</Label>
+												<div className="flex items-center gap-2">
+													<span className="text-xs text-muted-foreground">快捷键：Ctrl+1/2/3、Ctrl+B/I/U、Ctrl+K、Ctrl+Shift+K</span>
+													<Button type="button" variant="outline" size="sm" onClick={() => setPreviewOpen((v) => !v)}>
+														{previewOpen ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+														<span className="sr-only">{previewOpen ? '关闭预览' : '打开预览'}</span>
+													</Button>
+												</div>
+											</div>
+											<div className={previewOpen ? 'grid gap-3 lg:grid-cols-2' : 'space-y-2'}>
+												<div className="space-y-2">
+													<Textarea id="new-content" ref={newContentRef} value={newContent} onChange={(e) => setNewContent(e.target.value)} onKeyDown={handleEditorKeyDown} rows={10} className="min-h-[220px]" required />
+													<div className="text-xs text-muted-foreground">Ctrl+T 表格，Ctrl+Shift+M 公式，Ctrl+Shift+Q 引用，Alt+Shift+5 删除线</div>
+												</div>
+												{previewOpen ? (
+													<div className="rounded-md border bg-muted/20 p-3">
+														<div className="mb-2 text-xs font-medium text-muted-foreground">预览</div>
+														<div ref={previewRef} className="prose max-w-none break-words [&_ul]:list-disc [&_ul]:pl-6 [&_ol]:list-decimal [&_ol]:pl-6 [&_li]:my-1" dangerouslySetInnerHTML={{ __html: renderMarkdownToHtml(newContent || '') }} />
+													</div>
+												) : null}
+											</div>
+										</div>
+										<div className="space-y-2">
+											<label className="block text-sm font-medium text-muted-foreground">上传图片</label>
+											<input type="file" accept="image/*" className="block w-full text-sm" onChange={async (e) => {
+												const file = e.target.files && e.target.files[0];
+												if (!file) return;
+												setUploadError('');
+												if (file.size > 2 * 1024 * 1024) { setUploadError('文件过大 (最大 2MB)'); return; }
+												setUploadLoading(true);
+												try {
+													const formData = new FormData();
+													formData.append('file', file);
+													formData.append('type', 'post');
+													const res = await fetch('/api/upload', { method: 'POST', headers: getSecurityHeaders('POST', null), body: formData });
+													const data = await res.json();
+													if (!res.ok) throw new Error(data?.error || '上传失败');
+													insertIntoContent(`\n\n![](${data.url})\n\n`);
+													setPreviewOpen(true);
+												} catch (err: any) {
+													setUploadError(String(err?.message || err));
+												} finally {
+													setUploadLoading(false);
+												}
+											}} />
+											{uploadError ? <div className="text-sm text-destructive">{uploadError}</div> : null}
+											{uploadLoading ? <div className="text-sm text-muted-foreground">上传中…</div> : null}
+										</div>
+										<TurnstileWidget enabled={turnstileActive} siteKey={siteKey} onToken={setTurnstileToken} resetKey={turnstileResetKey} />
+										<Button type="submit" disabled={createLoading}>{createLoading ? '发布中...' : '发布'}</Button>
+									</form>
+								)}
+							</CardContent>
 						</Card>
 					) : (
-						posts.map((p) => {
-							const coverUrl = getCoverImageUrl(p.content || '');
-							const isAdmin = user?.role === 'admin';
-							const menuOpen = adminMenuPostId === p.id;
-							const actionLoading = adminActionPostId === p.id;
-							return (
-								<Card key={p.id}>
-									<CardContent className="py-5">
-										<div className="flex gap-4">
-											{coverUrl ? (
-												<img
-													src={coverUrl}
-													alt=""
-													className="h-20 w-28 shrink-0 rounded-md object-cover"
-													loading="lazy"
-													referrerPolicy="no-referrer"
-												/>
-											) : null}
-											<div className="min-w-0 flex-1 space-y-1">
-												<div className="flex items-start justify-between gap-2">
-													<div className="flex min-w-0 items-center gap-2">
-														{p.is_pinned ? (
-															<span className="inline-flex items-center gap-1 rounded-full border border-amber-500/30 bg-amber-500/10 px-2 py-0.5 text-xs font-medium text-amber-700 dark:text-amber-300">
-																<Pin className="h-3.5 w-3.5" />
-																置顶
-															</span>
+						<Card>
+							<CardContent className="py-6 text-sm text-muted-foreground">
+								<a className="text-foreground underline" href="/login">登录</a>{' '}后可发布、点赞和评论。
+							</CardContent>
+						</Card>
+					)}
+
+					{error ? <div className="rounded-md border border-destructive/50 bg-destructive/5 p-3 text-sm text-destructive">{error}</div> : null}
+
+					<div className="space-y-4">
+						<div ref={listTopRef} />
+						{loading ? (
+							<Card><CardContent className="py-6 text-sm text-muted-foreground">加载中...</CardContent></Card>
+						) : posts.length === 0 ? (
+							<Card><CardContent className="py-6 text-sm text-muted-foreground">暂无帖子</CardContent></Card>
+						) : (
+							posts.map((p) => {
+								const coverUrl = getCoverImageUrl(p.content || '');
+								const isAdmin = user?.role === 'admin';
+								const menuOpen = adminMenuPostId === p.id;
+								const actionLoading = adminActionPostId === p.id;
+								return (
+									<Card key={p.id}>
+										<CardContent className="py-5">
+											<div className="flex gap-4">
+												{coverUrl ? (<img src={coverUrl} alt="" className="h-20 w-28 shrink-0 rounded-md object-cover" loading="lazy" referrerPolicy="no-referrer" />) : null}
+												<div className="min-w-0 flex-1 space-y-1">
+													<div className="flex items-start justify-between gap-2">
+														<div className="flex min-w-0 items-center gap-2">
+															{p.is_pinned ? (<span className="inline-flex items-center gap-1 rounded-full border border-amber-500/30 bg-amber-500/10 px-2 py-0.5 text-xs font-medium text-amber-700 dark:text-amber-300"><Pin className="h-3.5 w-3.5" />置顶</span>) : null}
+															<a className="truncate text-lg font-semibold hover:underline" href={`/post.html?id=${p.id}`}>{p.title}</a>
+														</div>
+														{isAdmin ? (
+															<div className="relative">
+																<Button type="button" variant="ghost" size="sm" disabled={actionLoading} onMouseDown={(e) => e.stopPropagation()} onTouchStart={(e) => e.stopPropagation()} onClick={(e) => { e.preventDefault(); e.stopPropagation(); setAdminMenuPostId((cur) => (cur === p.id ? null : p.id)); }} aria-haspopup="menu" aria-expanded={menuOpen}>
+																	<MoreVertical className="h-4 w-4" /><span className="sr-only">更多</span>
+																</Button>
+																{menuOpen ? (
+																	<div className="absolute right-0 top-full z-50 mt-1 w-40 rounded-md border bg-background p-1 shadow-md" onMouseDown={(e) => e.stopPropagation()} onTouchStart={(e) => e.stopPropagation()} onClick={(e) => e.stopPropagation()}>
+																		<button type="button" disabled={actionLoading} className="flex w-full items-center gap-2 rounded px-2 py-1.5 text-left text-sm hover:bg-muted disabled:opacity-50" onClick={() => void adminTogglePin(p)}>
+																			<Pin className="h-4 w-4" />{p.is_pinned ? '取消置顶' : '置顶'}
+																		</button>
+																		<button type="button" disabled={actionLoading} className="flex w-full items-center gap-2 rounded px-2 py-1.5 text-left text-sm text-destructive hover:bg-destructive/10 disabled:opacity-50" onClick={() => void adminDeletePost(p)}>
+																			<Trash2 className="h-4 w-4" />删除
+																		</button>
+																		<div className="my-1 h-px bg-border" />
+																		<div className="px-2 py-1 text-xs font-medium text-muted-foreground">移动到分类</div>
+																		<button type="button" disabled={actionLoading} className="flex w-full items-center gap-2 rounded px-2 py-1.5 text-left text-sm hover:bg-muted disabled:opacity-50" onClick={() => void adminMovePost(p, null)}>未分类</button>
+																		{categories.map((c) => (
+																			<button key={c.id} type="button" disabled={actionLoading} className="flex w-full items-center gap-2 rounded px-2 py-1.5 text-left text-sm hover:bg-muted disabled:opacity-50" onClick={() => void adminMovePost(p, c.id)}>{c.name}</button>
+																		))}
+																	</div>
+																) : null}
+															</div>
 														) : null}
-														<a className="truncate text-lg font-semibold hover:underline" href={`/post.html?id=${p.id}`}>
-															{p.title}
-														</a>
 													</div>
-													{isAdmin ? (
-														<div className="relative">
-															<Button
-																type="button"
-																variant="ghost"
-																size="sm"
-																disabled={actionLoading}
-																onMouseDown={(e) => e.stopPropagation()}
-																onTouchStart={(e) => e.stopPropagation()}
-																onClick={(e) => {
-																	e.preventDefault();
-																	e.stopPropagation();
-																	setAdminMenuPostId((cur) => (cur === p.id ? null : p.id));
-																}}
-																aria-haspopup="menu"
-																aria-expanded={menuOpen}
-															>
-																<MoreVertical className="h-4 w-4" />
-																<span className="sr-only">更多</span>
-															</Button>
-															{menuOpen ? (
-																<div
-																	className="absolute right-0 top-full z-50 mt-1 w-40 rounded-md border bg-background p-1 shadow-md"
-																	onMouseDown={(e) => e.stopPropagation()}
-																	onTouchStart={(e) => e.stopPropagation()}
-																	onClick={(e) => e.stopPropagation()}
-																>
-																	<button
-																		type="button"
-																		disabled={actionLoading}
-																		className="flex w-full items-center gap-2 rounded px-2 py-1.5 text-left text-sm hover:bg-muted disabled:opacity-50"
-																		onClick={() => void adminTogglePin(p)}
-																	>
-																		<Pin className="h-4 w-4" />
-																		{p.is_pinned ? '取消置顶'
+													<div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-muted-foreground">
+														<span className="inline-flex items-center gap-2">
+															{p.author_avatar ? (<img src={p.author_avatar} alt="" className="h-6 w-6 rounded-full object-cover" loading="lazy" referrerPolicy="no-referrer" />) : (<span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-muted text-[10px] text-muted-foreground"><User className="h-4 w-4" /></span>)}
+															<span className="truncate text-foreground">{p.author_name}</span>
+															{p.author_role === 'admin' ? (<span className="inline-flex items-center gap-1 rounded border border-indigo-500/30 bg-indigo-500/10 px-1.5 py-0.5 text-[10px] font-medium text-indigo-700 dark:text-indigo-300"><Shield className="h-3 w-3" /><span className="sr-only">管理员</span></span>) : null}
+														</span>
+														{p.category_name ? (<><span>·</span><span className="truncate">{p.category_name}</span></>) : null}
+														<span>·</span>
+														<span className="whitespace-nowrap">{formatDate(p.created_at)}</span>
+													</div>
+													<div className="flex items-center gap-4 text-xs text-muted-foreground">
+														<span className="inline-flex items-center gap-1"><Heart className="h-4 w-4 text-rose-600" />{p.like_count || 0}</span>
+														<span className="inline-flex items-center gap-1"><MessageCircle className="h-4 w-4 text-sky-600" />{p.comment_count || 0}</span>
+														<span className="inline-flex items-center gap-1"><Eye className="h-4 w-4 text-emerald-600" />{p.view_count || 0}</span>
+													</div>
+												</div>
+											</div>
+										</CardContent>
+									</Card>
+								);
+							})
+						)}
+					</div>
+
+					<div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+						<div className="flex items-center gap-2">
+							<Button variant="outline" size="sm" disabled={currentPage <= 1 || loading} onClick={() => fetchPosts(Math.max(0, pageOffset - pageLimit))}><ChevronLeft className="h-4 w-4" /><span className="sr-only">上一页</span></Button>
+							<div className="flex items-center gap-1">
+								{pages.map((p, idx) =>
+									p === 'ellipsis' ? (
+										<span key={`e-${idx}`} className="px-2 text-sm text-muted-foreground">…</span>
+									) : (
+										<Button key={p} variant={p === currentPage ? 'secondary' : 'outline'} size="sm" disabled={loading} onClick={() => fetchPosts((p - 1) * pageLimit)}>{p}</Button>
+									)
+								)}
+							</div>
+							<Button variant="outline" size="sm" disabled={currentPage >= totalPages || loading} onClick={() => fetchPosts(pageOffset + pageLimit)}><ChevronRight className="h-4 w-4" /><span className="sr-only">下一页</span></Button>
+						</div>
+						<form className="flex items-center gap-2" onSubmit={(e) => {
+							e.preventDefault();
+							const parsed = Number.parseInt(jumpTo, 10);
+							if (!Number.isFinite(parsed)) return;
+							const next = Math.min(Math.max(parsed, 1), totalPages);
+							setJumpTo(String(next));
+							fetchPosts((next - 1) * pageLimit);
+						}}>
+							<div className="text-sm text-muted-foreground">第 {currentPage} / {totalPages} 页</div>
+							<Input value={jumpTo} onChange={(e) => setJumpTo(e.target.value)} inputMode="numeric" placeholder="跳页" className="h-9 w-20" />
+							<Button variant="outline" size="sm" type="submit" disabled={loading}>跳转</Button>
+						</form>
+					</div>
+				</div>
+			</PageShell>
+		</div>
+	);
+}
