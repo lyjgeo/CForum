@@ -387,7 +387,7 @@ export function IndexPage() {
 	}
 
 	return (
-		<div className="min-h-dvh bg-lime-100">
+		<div className="min-h-dvh bg-background">
 			<PageShell>
 				<div className="space-y-6">
 					{banner ? <div className="rounded-md border bg-muted/40 p-3 text-sm">{banner}</div> : null}
@@ -423,7 +423,7 @@ export function IndexPage() {
 					</div>
 
 					{user ? (
-						<Card className="bg-yellow-50">
+						<Card className="bg-card">
 							<CardHeader>
 								<CardTitle className="flex items-center justify-between gap-2">
 									<span>发布新帖</span>
