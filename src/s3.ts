@@ -34,9 +34,29 @@ export async function uploadImage(env: S3Env, file: File, userId: string | numbe
 
     if (env.BUCKET) {
         const buffer = await file.arrayBuffer();
-        await env.BUCKET.put(key, buffer, {
+        let finalBuffer = buffer;
+        let contentType = file.type;
+
+        // 如果绑定了 IMAGES，就进行压缩和格式转换
+        if (env.IMAGES) {
+            try {
+                const transformed = await env.IMAGES
+                    .input(buffer)
+                    .transform({ width: 1200 })
+                    .output({ format: "image/webp", quality: 85 });
+
+                const transformedBuffer = await transformed.arrayBuffer();
+                finalBuffer = transformedBuffer;
+                contentType = "image/webp";
+                console.log(`[Compress] 压缩成功：${buffer.byteLength} -> ${finalBuffer.byteLength} bytes`);
+            } catch (e) {
+                console.error('[Compress] 压缩失败，使用原始图片:', e);
+            }
+        }
+
+        await env.BUCKET.put(key, finalBuffer, {
             httpMetadata: {
-                contentType: file.type,
+                contentType: contentType,
             },
         });
         return key;
