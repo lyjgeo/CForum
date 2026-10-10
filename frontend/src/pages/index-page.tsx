@@ -41,7 +41,6 @@ export function IndexPage() {
 	const [uploadLoading, setUploadLoading] = React.useState(false);
 	const [uploadError, setUploadError] = React.useState('');
 
-	// insert text at current cursor position in the textarea (or append)
 	function insertIntoContent(insertText: string) {
 		if (newContentRef.current) {
 			const el = newContentRef.current;
@@ -51,7 +50,6 @@ export function IndexPage() {
 			const after = newContent.slice(end);
 			const updated = before + insertText + after;
 			setNewContent(updated);
-			// reposition cursor immediately after inserted text
 			setTimeout(() => {
 				el.selectionStart = el.selectionEnd = start + insertText.length;
 				el.focus();
@@ -517,13 +515,14 @@ export function IndexPage() {
 	}
 
 	return (
-		<PageShell>
-			<div className="min-h-dvh bg-lime-100 space-y-6">
+		<div className="min-h-dvh bg-lime-100">
+			<PageShell>
+				<div className="space-y-6">
 				{banner ? <div className="rounded-md border bg-muted/40 p-3 text-sm">{banner}</div> : null}
 				<div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
 					<div>
-							<h1 className="text-3xl font-bold tracking-tight text-pink-500 drop-shadow-[0_0_12px_rgba(236,72,153,0.55)]">春水堂</h1>
-						<p className="text-sm text-muted-foreground">一江春水向东流，人生苦短，做爱解忧</p>
+							<h1 className="text-3xl font-bold tracking-tight text-pink-500 drop-shadow-[0_0_12px_rgba(236,72,153,0.55)]">忠党爱国</h1>
+						<p className="text-sm text-muted-foreground">只谈风月，莫问国事。</p>
 					</div>
 					<div className="flex items-center gap-2">
 						<label className="text-sm text-muted-foreground" htmlFor="category-filter">
@@ -693,7 +692,6 @@ export function IndexPage() {
 					const file = e.target.files && e.target.files[0];
 					if (!file) return;
 					setUploadError('');
-					// allow up to 2MB
 					if (file.size > 2 * 1024 * 1024) {
 						setUploadError('文件过大 (最大 2MB)');
 						return;
@@ -710,7 +708,6 @@ export function IndexPage() {
 						});
 						const data = await res.json();
 						if (!res.ok) throw new Error(data?.error || '上传失败');
-                        // insert markdown link at cursor and ensure preview is visible
                         insertIntoContent(`
 
 ![](${data.url})
@@ -825,165 +822,4 @@ export function IndexPage() {
 																		onClick={() => void adminTogglePin(p)}
 																	>
 																		<Pin className="h-4 w-4" />
-																		{p.is_pinned ? '取消置顶' : '置顶'}
-																	</button>
-																	<button
-																		type="button"
-																		disabled={actionLoading}
-																		className="flex w-full items-center gap-2 rounded px-2 py-1.5 text-left text-sm text-destructive hover:bg-destructive/10 disabled:opacity-50"
-																		onClick={() => void adminDeletePost(p)}
-																	>
-																		<Trash2 className="h-4 w-4" />
-																		删除
-																	</button>
-																	<div className="my-1 h-px bg-border" />
-																	<div className="px-2 py-1 text-xs font-medium text-muted-foreground">移动到分类</div>
-																	<button
-																		type="button"
-																		disabled={actionLoading}
-																		className="flex w-full items-center gap-2 rounded px-2 py-1.5 text-left text-sm hover:bg-muted disabled:opacity-50"
-																		onClick={() => void adminMovePost(p, null)}
-																	>
-																		未分类
-																	</button>
-																	{categories.map((c) => (
-																		<button
-																			key={c.id}
-																			type="button"
-																			disabled={actionLoading}
-																			className="flex w-full items-center gap-2 rounded px-2 py-1.5 text-left text-sm hover:bg-muted disabled:opacity-50"
-																			onClick={() => void adminMovePost(p, c.id)}
-																		>
-																			{c.name}
-																		</button>
-																	))}
-																</div>
-															) : null}
-														</div>
-													) : null}
-												</div>
-												<div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-muted-foreground">
-													<span className="inline-flex items-center gap-2">
-														{p.author_avatar ? (
-															<img
-																src={p.author_avatar}
-																alt=""
-																className="h-6 w-6 rounded-full object-cover"
-																loading="lazy"
-																referrerPolicy="no-referrer"
-															/>
-														) : (
-															<span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-muted text-[10px] text-muted-foreground">
-																<User className="h-4 w-4" />
-															</span>
-														)}
-														<span className="truncate text-foreground">{p.author_name}</span>
-														{p.author_role === 'admin' ? (
-															<span className="inline-flex items-center gap-1 rounded border border-indigo-500/30 bg-indigo-500/10 px-1.5 py-0.5 text-[10px] font-medium text-indigo-700 dark:text-indigo-300">
-																<Shield className="h-3 w-3" />
-																<span className="sr-only">管理员</span>
-															</span>
-														) : null}
-													</span>
-													{p.category_name ? (
-														<>
-															<span>·</span>
-															<span className="truncate">{p.category_name}</span>
-														</>
-													) : null}
-													<span>·</span>
-													<span className="whitespace-nowrap">{formatDate(p.created_at)}</span>
-												</div>
-												<div className="flex items-center gap-4 text-xs text-muted-foreground">
-													<span className="inline-flex items-center gap-1">
-														<Heart className="h-4 w-4 text-rose-600" />
-														{p.like_count || 0}
-													</span>
-													<span className="inline-flex items-center gap-1">
-														<MessageCircle className="h-4 w-4 text-sky-600" />
-														{p.comment_count || 0}
-													</span>
-													<span className="inline-flex items-center gap-1">
-														<Eye className="h-4 w-4 text-emerald-600" />
-														{p.view_count || 0}
-													</span>
-												</div>
-											</div>
-										</div>
-									</CardContent>
-								</Card>
-							);
-						})
-					)}
-				</div>
-
-				<div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-					<div className="flex items-center gap-2">
-						<Button
-							variant="outline"
-							size="sm"
-							disabled={currentPage <= 1 || loading}
-							onClick={() => fetchPosts(Math.max(0, pageOffset - pageLimit))}
-						>
-							<ChevronLeft className="h-4 w-4" />
-							<span className="sr-only">上一页</span>
-						</Button>
-						<div className="flex items-center gap-1">
-							{pages.map((p, idx) =>
-								p === 'ellipsis' ? (
-									<span key={`e-${idx}`} className="px-2 text-sm text-muted-foreground">
-										…
-									</span>
-								) : (
-									<Button
-										key={p}
-										variant={p === currentPage ? 'secondary' : 'outline'}
-										size="sm"
-										disabled={loading}
-										onClick={() => fetchPosts((p - 1) * pageLimit)}
-									>
-										{p}
-									</Button>
-								)
-							)}
-						</div>
-						<Button
-							variant="outline"
-							size="sm"
-							disabled={currentPage >= totalPages || loading}
-							onClick={() => fetchPosts(pageOffset + pageLimit)}
-						>
-							<ChevronRight className="h-4 w-4" />
-							<span className="sr-only">下一页</span>
-						</Button>
-					</div>
-					<form
-						className="flex items-center gap-2"
-						onSubmit={(e) => {
-							e.preventDefault();
-							const parsed = Number.parseInt(jumpTo, 10);
-							if (!Number.isFinite(parsed)) return;
-							const next = Math.min(Math.max(parsed, 1), totalPages);
-							setJumpTo(String(next));
-							fetchPosts((next - 1) * pageLimit);
-						}}
-					>
-						<div className="text-sm text-muted-foreground">
-							第 {currentPage} / {totalPages} 页
-						</div>
-						<Input
-							value={jumpTo}
-							onChange={(e) => setJumpTo(e.target.value)}
-							inputMode="numeric"
-							placeholder="跳页"
-							className="h-9 w-20"
-						/>
-						<Button variant="outline" size="sm" type="submit" disabled={loading}>
-							跳转
-						</Button>
-					</form>
-				</div>
-			</div>
-		</PageShell>
-	);
-}
+																		{p.is_pinned ? '取消置顶'
