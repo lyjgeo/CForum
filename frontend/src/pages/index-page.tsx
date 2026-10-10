@@ -423,7 +423,7 @@ export function IndexPage() {
 					</div>
 
 					{user ? (
-						<Card>
+						<Card className="bg-pink-100">
 							<CardHeader>
 								<CardTitle className="flex items-center justify-between gap-2">
 									<span>发布新帖</span>
