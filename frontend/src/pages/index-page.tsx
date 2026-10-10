@@ -518,7 +518,7 @@ export function IndexPage() {
 
 	return (
 		<PageShell>
-			<div className="space-y-6">
+			<div className="min-h-dvh bg-lime-100 space-y-6">
 				{banner ? <div className="rounded-md border bg-muted/40 p-3 text-sm">{banner}</div> : null}
 				<div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
 					<div>
