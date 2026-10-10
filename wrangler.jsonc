@@ -28,6 +28,9 @@
 			"bucket_name": "cforum-images"
 		}
 	],
+        "images": {
+                "binding": "IMAGES"
+        },
 	"workers_dev": true,
 	"env": {
 		"production": {
